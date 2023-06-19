@@ -7,38 +7,78 @@ import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
+import Divider from '@mui/material/Divider';
+
 import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
+/* import Tooltip from '@mui/material/Tooltip'; */
 import MenuItem from '@mui/material/MenuItem';
 import "./header.css"
 
 import { Link } from "react-router-dom"
-
-const pages = ['Perfil', 'Servicios', 'Billetera','Sobre'];
-const settings = ['perfil', 'Movimientos', 'Dashboard', 'Logout'];
+const pages =[
+  {
+    item: {
+      id:1,
+      titulo: "Servicios",
+      url:"Servicios"
+    },
+  },
+ {
+  item:{
+    id:3,
+    titulo: "Sobre nosotros",
+    url: "Sobre"
+  }
+  },
+  {
+    item:{
+      id:4,
+      titulo: "Pago",
+      url:"Pagos"
+    }
+  },
+]
+/* const pages = ['Perfil', 'Servicios', 'Billetera','Sobre']; */
+const options = [
+  {
+    login: {
+     btnName: "Iniciar sesion",
+     url: "login"
+    },
+  },
+ {
+  login:{
+    btnName: "Registrare",
+    url: "register"
+  }
+  },];
+/* const settings = ['Perfil', 'Movimientos', 'Dashboard', 'Logout']; */
 
 function NavMenu() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+ /*  const [anchorElUser, setAnchorElUser] = React.useState(null); */
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
-  const handleOpenUserMenu = (event) => {
+/*   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
-  };
+  }; */
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = () => {
+/*   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-
+ */
   return (
-    <AppBar color='inherit' position="fixed">
+    <AppBar color='inherit' position="fixed" sx={
+      {
+        justifyContent:"space-evenly"
+      }
+    }>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
        
@@ -89,11 +129,36 @@ function NavMenu() {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+              {pages.map((page, i) => {
+                const {titulo,url} = page.item
+                return(
+                  <MenuItem key={i} onClick={handleCloseNavMenu}>
+                  <Typography  
+                  component={Link} 
+                  to={url} 
+                  textAlign="center"
+                  sx={{ my: 2, color: 'black', display: 'block', textDecoration:"none" }}
+                  >
+                    {titulo}
+                  </Typography>
                 </MenuItem>
-              ))}
+                )
+              })}
+              <Divider variant='middle' />
+              {options.map((option,i) => {
+                const {btnName, url} = option.login;
+                return(
+                <MenuItem key={i} onClick={handleCloseNavMenu}>
+                <Typography 
+                component={Link} 
+                to={url}
+                textAlign="center"
+                sx={{ my: 2, color: 'black', display: 'block', textDecoration:"none" }}
+                >
+                  {btnName}
+                </Typography>
+              </MenuItem>
+            )})}
             </Menu>
           </Box>
 
@@ -118,48 +183,43 @@ function NavMenu() {
             
           </Typography>
           <Box  sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }  }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'black', display: 'block' }}
-                component={Link}
-                to={`/${page}`}
-                className="nav-item"
-              >
-                {page}
-              </Button>
-            ))}
+            {
+              pages.map((page)=>{
+                const {titulo, url, id} = page.item
+                return(
+                  <Button
+                  key={id}
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: 'black', display: 'block' }}
+                  component={Link}
+                  to={`/${url}`}
+                  className="nav-item"
+                >
+                  {titulo}
+                </Button>
+                )
+              })
+            }
           </Box>
 
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp"  />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
+          <Box sx={{ flexGrow: 1,  display: { xs: 'none', md: 'flex' } , justifyContent: 'flex-end' }}>
+          {options.map((option) => {
+            const {btnName, url} = option.login;
+            return(
+              <Button
+              component={Link}
+              to={url}
+              sx={{ color: 'black' }}
+              
+
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography component={Link} to={`${setting}`} textAlign="center" sx={{textDecoration:'none', color: 'black'}}>{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
+              {btnName}
+            </Button>
+            )
+
+          })}
+           
+           
           </Box>
         </Toolbar>
       </Container>
